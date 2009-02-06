@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="sjl" default="all" basedir="./">
+
+	<property file="build.properties"/>
+	
+	<target name="all" depends="clean,pack_javascript,build-docs" />
+	
+	<target name="clean">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${path.build}" includes="**/*"/>
+		</delete>
+	</target>
+
+	<target name="pack_javascript" depends="_create_build_tree">
+		<antcall target="package-bootstrap"></antcall>
+		<antcall target="compress-javascript-shrinksafe"/>
+		<antcall target="copy-to-test"/>
+	</target>
+
+	<target name="_create_build_tree">
+		<mkdir dir="${path.build.doc}"/>
+		<mkdir dir="${path.build.release}"/>
+	</target>
+
+	<target name="package-bootstrap" depends="package-corelibs, package-ajile, package-common, package-init"/>
+
+	<target name="package-corelibs">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${path.src}" includes="bootstrap.js"/>
+		</delete>
+
+		<apply executable="java" dest="${path.build.release}" parallel="false" failonerror="true" force="true" verbose="true">
+			<arg line="-jar ${path.lib}/custom_rhino.jar -c"/>
+
+			<srcfile/>
+			<fileset dir="${path.src}/com/sjl/lang" includes="Util*,DOM*,OO*,json*"/>
+			<fileset dir="${path.src}/com/sjl" includes="History.js"/>
+
+			<mapper id="js_out" type="glob" from="*" to="${path.build.release}/bootstrap.js"/>
+			<redirector createemptyfiles="true" append="true" output="${path.build.release}/bootstrap.js"/>
+		</apply>
+	</target>
+
+	<target name="package-ajile">
+		<concat append="true" fixlastline="true" destfile="${path.build.release}/bootstrap.js">
+			<fileset dir="${path.src}" includes="com.iskitz.ajile.js"/>
+		</concat>
+	</target>
+
+	<target name="package-common">
+		<apply executable="java" dest="${path.build.release}" parallel="false" failonerror="true" force="true" verbose="true">
+			<arg line="-jar ${path.lib}/custom_rhino.jar -c"/>
+
+			<srcfile/>
+			<fileset dir="${path.src}/com/sjl/application" includes="Environment.js"/>
+			<fileset dir="${path.src}/com/sjl" includes="DOMParser.js,TearDown.js,EventDispatcher.js,DOMEventDispatcher.js"/>
+			<fileset dir="${path.src}/com/sjl/io" includes="ResourceLoader.js"/>
+
+			<mapper id="js_out" type="glob" from="*" to="${path.build.release}/bootstrap.js"/>
+			<redirector createemptyfiles="true" append="true" output="${path.build.release}/bootstrap.js"/>
+		</apply>
+	</target>
+
+	<target name="package-init">
+
+		<apply executable="java" dest="${path.build.release}" parallel="false" failonerror="true" force="true" verbose="true">
+			<arg line="-jar ${path.lib}/custom_rhino.jar -c"/>
+
+			<srcfile/>
+			<fileset dir="${path.src}" includes="index.js"/>
+			
+			<mapper id="js_out" type="glob" from="*" to="${path.build.release}/bootstrap.js"/>
+			<redirector createemptyfiles="true" append="true" output="${path.build.release}/bootstrap.js"/>
+		</apply>
+	</target>
+
+	<target name="compress-javascript-shrinksafe">
+		
+		<copy todir="${path.build.release}">
+			<fileset dir="${path.src}" excludesfile="build_exclusions"/>
+		</copy>
+		
+		<apply executable="java" dest="${path.build.release}" parallel="false" failonerror="true" force="true" verbose="true">
+			<arg line="-jar ${path.lib}/custom_rhino.jar -c"/>
+
+			<srcfile/>
+			<fileset dir="${path.src}" excludesfile="build_exclusions"/>
+			
+			<mapper id="js_out" type="glob" from="*.js" to="${path.build.release}/*.js"/>
+			<redirector createemptyfiles="true">
+				<outputmapper refid="js_out"/>
+			</redirector> 
+		</apply>
+	</target>
+	
+	<target name="copy-to-test">
+		<copy todir="${path.test}">
+			<fileset dir="${path.build.release}"/>
+		</copy>
+	</target>
+
+	<target name="build-docs">
+		
+		<copy todir="${path.build.doc}/apiviewer">
+			<fileset dir="${path.lib}/apiviewer"/>
+		</copy>
+		
+		<apply executable="${path.lib}/jsdoc/jsdoc.pl" parallel="true">
+			<arg value="--package-naming"/>
+			<arg value="--project-name=${project.name}"/>
+			<arg value="-p"/>
+			<arg value="--recursive"/>
+			<arg value="--nested-file-naming"/>
+			<arg value="--format=xml"/>
+			<arg value="-d=${path.build.doc}"/>
+			<fileset dir="${path.src}" casesensitive="yes">
+				<filename name="**/*.js"/>
+				<filename name="**/*Blowfish*" negate="true"/>
+				<filename name="**/*iskitz*" negate="true"/>
+			</fileset>
+		</apply>
+		
+		<antcall target="fix-docs-xml"/>
+	</target>
+
+	<target name="fix-docs-xml">
+		<exec executable="${path.lib}/js_fix_CDATA_entities.php"/>
+	</target>
+
+</project>
