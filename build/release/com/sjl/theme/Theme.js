@@ -1,6 +1,6 @@
+Namespace("com.sjl.theme");
 Import("com.sjl.io.Http");
 Import("com.sjl.EventDispatcher");
-Namespace("com.sjl.theme");
 com.sjl.theme.Theme=Class.create();
 com.sjl.theme.Theme.inherits("com.sjl.EventDispatcher");
 com.sjl.theme.Theme.prototype.initialize=function(){

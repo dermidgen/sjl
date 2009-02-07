@@ -1,4 +1,16 @@
 /**
+ * Standard JavaScript Library
+ *
+ * LICENSE
+ *
+ * This source file is subject to the sjl Public License license that
+ * is bundled with this package in the file LICENSE.txt.
+ *
+ * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @copyright Copyright (c) 2008, Danny Graham, Scott Thundercloud
+ */
+
+/**
  * @fileoverview Here we seek to extend the JavaScript language a bit for our OOP needs.
  * It should be noted that we're a bit unconventional here.  What we're calling inherits
  * should be more properly named mixin, but we liked the sound of inherits better cause

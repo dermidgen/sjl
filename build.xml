@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="sjl" default="all" basedir="./">
+<project name="sjl" default="all" basedir="./" xmlns:ac="antlib:net.sf.antcontrib">
 
 	<property file="build.properties"/>
 	
@@ -98,6 +98,24 @@
 		<copy todir="${path.test}">
 			<fileset dir="${path.build.release}"/>
 		</copy>
+	</target>
+	
+	<target name="addlicense">
+		<ac:for param="file">
+			<fileset id="missing" dir="${path.build.release}" includes="**/*.js">
+				<not>
+					<contains text="* @license http://www.opensource.org/licenses/bsd-license.php New BSD License"/>
+				</not>
+			</fileset>
+			<sequential>
+				<copy file="@{file}" tofile="@{file}.withlicense">
+					<filterchain>
+						<concatfilter prepend="${path.lib}/license-js.stub.txt"/>
+					</filterchain>
+				</copy>
+				<move file="@{file}.withlicense" tofile="@{file}"/>
+			</sequential>
+		</ac:for>
 	</target>
 
 	<target name="build-docs">
