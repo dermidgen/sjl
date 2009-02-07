@@ -6,6 +6,8 @@
 	
 	<target name="all" depends="clean,pack_javascript,build-docs" />
 	
+	<target name="dist" depends="all, package-release, clean, package-release-src"/>
+	
 	<target name="clean">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${path.build}" includes="**/*"/>
@@ -21,6 +23,7 @@
 
 	<target name="_create_build_tree">
 		<mkdir dir="${path.build.doc}"/>
+		<mkdir dir="${path.build.bin}"/>
 		<mkdir dir="${path.build.release}"/>
 	</target>
 
@@ -145,6 +148,25 @@
 
 	<target name="fix-docs-xml">
 		<exec executable="${path.lib}/js_fix_CDATA_entities.php"/>
+	</target>
+	
+	<target name="package-release">
+		<tar destfile="${path.build.bin}/${project.name}-${project.version}.tar">
+			<tarfileset dir="${path.build.release}">
+			</tarfileset>
+			<tarfileset dir="${project.basedir}">
+				<include name="**.txt"/>
+			</tarfileset>
+		</tar>
+	</target>
+	
+	<target name="package-release-src">
+		<tar destfile="${path.build.bin}/${project.name}-${project.version}-src.tar">
+			<tarfileset dir="./">
+				<exclude name="**/.git/**"/>
+				<exclude name="**/test/**"/>
+			</tarfileset>
+		</tar>
 	</target>
 
 </project>
