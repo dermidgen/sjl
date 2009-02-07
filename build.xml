@@ -15,6 +15,7 @@
 	<target name="pack_javascript" depends="_create_build_tree">
 		<antcall target="package-bootstrap"></antcall>
 		<antcall target="compress-javascript-shrinksafe"/>
+		<antcall target="addlicense"/>
 		<antcall target="copy-to-test"/>
 	</target>
 
