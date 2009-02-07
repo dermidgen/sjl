@@ -1,0 +1,24 @@
+/**
+ * Standard JavaScript Library
+ *
+ * LICENSE
+ *
+ * This source file is subject to the sjl Public License license that
+ * is bundled with this package in the file LICENSE.txt.
+ *
+ * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @copyright Copyright (c) 2008, Danny Graham, Scott Thundercloud
+ */
+
+# Usage
+
+SJL is configured to allow to you to specify where you javascript source tree root lies.
+The default configurations is at /lib/js of your webroot.  This is where you will want
+to place the contents of build/release - or the extracted contents of a distribution
+package.
+
+# Builds
+
+Several components are required before builds will run correctly.
+
+ /** TODO: Complete build instructions **/
