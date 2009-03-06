@@ -10,14 +10,27 @@
  * @copyright Copyright (c) 2008, Danny Graham, Scott Thundercloud
  */
 
-//Ajile.EnableDebug(false);
-//Ajile.EnableLegacy(false);
-//Ajile.EnableCloak(false);
+Ajile.EnableDebug(false);
+//Ajile.ShowLog();
+Ajile.EnableCloak(true);
 
-window.onReady = function()
+//IE Onload - without delays for image loads
+/*@cc_on @*/
+/*@if (@_win32)
+document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
+var script = document.getElementById("__ie_onload");
+script.onreadystatechange = function() {
+  if (this.readyState == "complete") {
+    __sjlinit(); // call the onload handler
+  }
+};
+/*@end @*/
+
+function kickstart()
 {
+	// We need to tell the resource loader what our base path is for Imports
 	var io = com.sjl.io.ResourceLoader.GetInstance();
-	io.SetPath('./');
+	io.SetPath('.');
 	
 	var e = {};
 	e.oncomplete = function()
@@ -34,4 +47,4 @@ window.onReady = function()
 	Import('com.sjl.test.contentBox2');
 	Import('com.sjl.test.contentBox3');
 	Import('com.sjl.test.contentBox4');
-};
+}

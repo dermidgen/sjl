@@ -38,8 +38,8 @@
 			<arg line="-jar ${path.lib}/custom_rhino.jar -c"/>
 
 			<srcfile/>
-			<fileset dir="${path.src}/com/sjl/lang" includes="Util*,DOM*,OO*,json*"/>
-			<fileset dir="${path.src}/com/sjl" includes="History.js"/>
+			<fileset dir="${path.src}/com/sjl/lang" includes="Util*,DOM*,OO*"/>
+			<!--<fileset dir="${path.src}/com/sjl" includes="History.js"/>-->
 
 			<mapper id="js_out" type="glob" from="*" to="${path.build.release}/bootstrap.js"/>
 			<redirector createemptyfiles="true" append="true" output="${path.build.release}/bootstrap.js"/>

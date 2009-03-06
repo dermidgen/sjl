@@ -194,14 +194,15 @@ var Class = {
 			}
 
 			// Validate Interfaces
-			for(var i=0; i<interfaces.length; i++)
-			{
-				var mObj = eval(interfaces[i]);
-				for(var property in mObj)
-				{
-					if (typeof finalClass[property] == 'undefined') throw new InterfaceException(property);
-				}
-			}
+			/** interface support is slated for removal as it's just extra bloat **/
+//			for(var i=0; i<interfaces.length; i++)
+//			{
+//				var mObj = eval(interfaces[i]);
+//				for(var property in mObj)
+//				{
+//					if (typeof finalClass[property] == 'undefined') throw new InterfaceException(property);
+//				}
+//			}
 
 			return finalClass;
 		}

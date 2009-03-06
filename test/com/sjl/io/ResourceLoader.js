@@ -16,15 +16,9 @@ com.sjl.io.ResourceLoader.prototype.initialize=function(){
 this.BasePath="lib/js";
 this.Queue=[];
 this.Loaded=["com.sjl.EventDispatcher","com.sjl.application.Environment","com.sjl.TearDown","com.sjl.DOMEventDispatcher","com.sjl.io.ResourceLoader"];
-if(!window.onReady){
-window.onReady=function(){
-if(console&&console.info){
-console.info("No entry point set.");
-}
-};
-}
+this.__import=window.Import;
 this._onLoad=function(){
-if(!arguments[0]||arguments[0]==""){
+if((!arguments[0]||arguments[0]=="")||this.IsLoaded(arguments[0])){
 return;
 }
 var p=arguments[0];
@@ -58,15 +52,20 @@ return true;
 return false;
 };
 com.sjl.io.ResourceLoader.prototype.Import=function(p){
-if(this.Loaded.indexOf(p)>=0){
+var io=com.sjl.io.ResourceLoader.GetInstance();
+if(arguments.length>1){
+io.__import.apply(window,arguments);
 return;
 }
-if(this.Queue.indexOf(p)>=0){
+if(io.Loaded.indexOf(p)>=0){
 return;
 }
-this.Queue.push(p);
-var _8=(window.DocRoot)?window.DocRoot+this.BasePath:this.BasePath;
-this._import(p,p,_8,"/");
+if(io.Queue.indexOf(p)>=0){
+return;
+}
+io.Queue.push(p);
+var _9=(window.DocRoot)?window.DocRoot+io.BasePath:io.BasePath;
+ImportAs(p,p,_9,"/");
 };
 com.sjl.io.ResourceLoader.__instance=null;
 com.sjl.io.ResourceLoader.GetInstance=function(){
@@ -75,9 +74,30 @@ this.__instance=new com.sjl.io.ResourceLoader();
 }
 return this.__instance;
 };
-com.sjl.io.ResourceLoader.prototype._import=ImportAs;
-Import=com.sjl.io.ResourceLoader.GetInstance().Import.bind(com.sjl.io.ResourceLoader.GetInstance());
-window.onload=function(){
-window.onReady();
-};
+var io=com.sjl.io.ResourceLoader.GetInstance();
+window.Import=io.Import;
+function __sjlinit(){
+if(arguments.callee.done){
+return;
+}
+arguments.callee.done=true;
+if(typeof window.kickstart!="undefined"){
+window.kickstart();
+}
+}
+if(/WebKit/i.test(navigator.userAgent)){
+var _timer=setInterval(function(){
+if(/loaded|complete/.test(document.readyState)){
+clearInterval(_timer);
+__sjlinit();
+}
+},10);
+}else{
+if(document.addEventListener){
+document.addEventListener("DOMContentLoaded",__sjlinit,false);
+}
+}
+if(!document.all){
+window.onload=__sjlinit;
+}
 

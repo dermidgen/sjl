@@ -94,14 +94,6 @@ var p=eval("new "+_2.__extends+"();");
 var _15=(p.isDOM)?_9.apply(this,[p]):_c.apply(this,[p]);
 }
 }
-for(var i=0;i<_10.length;i++){
-var _13=eval(_10[i]);
-for(var _14 in _13){
-if(typeof _15[_14]=="undefined"){
-throw new _7(_14);
-}
-}
-}
 return _15;
 };
 return _2;

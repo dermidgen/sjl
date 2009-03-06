@@ -23,8 +23,8 @@ Function.prototype.bind = function(object) {
   var __method = this;
   return function() {
     return __method.apply(object, arguments);
-  }
-}
+  };
+};
 
 /*
 	forEach, version 1.0
@@ -32,52 +32,53 @@ Function.prototype.bind = function(object) {
 	License: http://www.opensource.org/licenses/mit-license.php
 */
 
-// array-like enumeration
-if (!Array.forEach) { // mozilla already supports this
-	Array.forEach = function(array, block, context) {
-		for (var i = 0; i < array.length; i++) {
-			block.call(context, array[i], i, array);
-		}
-	};
-}
-
-// generic enumeration
-Function.prototype.forEach = function(object, block, context) {
-	for (var key in object) {
-		if (typeof this.prototype[key] == "undefined") {
-			block.call(context, object[key], key, object);
-		}
-	}
-};
-
-// character enumeration
-String.forEach = function(string, block, context) {
-	Array.forEach(string.split(""), function(chr, index) {
-		block.call(context, chr, index, string);
-	});
-};
-
-// globally resolve forEach enumeration
-var forEach = function(object, block, context) {
-	if (object) {
-		var resolve = Object; // default
-		if (object instanceof Function) {
-			// functions have a "length" property
-			resolve = Function;
-		} else if (object.forEach instanceof Function) {
-			// the object implements a custom forEach method so use that
-			object.forEach(block, context);
-			return;
-		} else if (typeof object == "string") {
-			// the object is a string
-			resolve = String;
-		} else if (typeof object.length == "number") {
-			// the object is array-like
-			resolve = Array;
-		}
-		resolve.forEach(object, block, context);
-	}
-};
+//// array-like enumeration
+//if (!Array.forEach) { // mozilla already supports this
+//	Array.forEach = function(array, block, context) {
+//		for (var i = 0; i < array.length; i++) {
+//			block.call(context, array[i], i, array);
+//		}
+//	};
+//}
+//
+//// generic enumeration
+//Function.prototype.forEach = function(object, block, context) {
+//	for (var key in object) {
+//		if (typeof this.prototype[key] == "undefined") {
+//			block.call(context, object[key], key, object);
+//		}
+//	}
+//};
+//
+//// character enumeration
+//String.forEach = function(string, block, context) {
+//	Array.forEach(string.split(""), function(chr, index) {
+//		block.call(context, chr, index, string);
+//	});
+//};
+//
+//// globally resolve forEach enumeration
+//var forEach = function(object, block, context) {
+//	if (object) {
+//		var resolve = Object; // default
+//		if (object instanceof Function) {
+//			// functions have a "length" property
+//			resolve = Function;
+//		} else if (object.forEach instanceof Function) {
+//			// the object implements a custom forEach method so use that
+//			object.forEach(block, context);
+//			return;
+//		} else if (typeof object == "string") {
+//			// the object is a string
+//			resolve = String;
+//		} else if (typeof object.length == "number") {
+//			// the object is array-like
+//			resolve = Array;
+//		}
+//		resolve.forEach(object, block, context);
+//	}
+//};
+//
 
 if (!Array.indexOf)
 {
@@ -89,29 +90,29 @@ if (!Array.indexOf)
 			if (this[i] == searchElement) return i;
 		}
 		return -1;
-	}
+	};
 }
-
-if (!Array.remove)
-{
-// Array Remove - By John Resig (MIT Licensed)
-Array.prototype.remove = function(from, to) {
-  var rest = this.slice((to || from) + 1 || this.length);
-  this.length = from < 0 ? this.length + from : from;
-  return this.push.apply(this, rest);
-};
-}
-
-if (!Object.hasProperty)
-{
-	Object.prototype.hasProperty = function(searchElement)
-	{
-		for(var i in this)
-		{
-			if (this.hasOwnProperty(i))
-			{
-				if (typeof this[i] != 'undefined') return true;
-			}
-		}
-	}
-}
+//
+//if (!Array.remove)
+//{
+//// Array Remove - By John Resig (MIT Licensed)
+//Array.remove = function(from, to) {
+//  var rest = this.slice((to || from) + 1 || this.length);
+//  this.length = from < 0 ? this.length + from : from;
+//  return this.push.apply(this, rest);
+//};
+//}
+//
+//if (!Object.hasProperty)
+//{
+//	Object.hasProperty = function(searchElement)
+//	{
+//		for(var i in this)
+//		{
+//			if (this.hasOwnProperty(i))
+//			{
+//				if (typeof this[i] != 'undefined') return true;
+//			}
+//		}
+//	}
+//}

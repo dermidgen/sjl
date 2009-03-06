@@ -25,7 +25,6 @@ Namespace("com.sjl.io");
 
 com.sjl.io.ResourceLoader = Class.create();
 com.sjl.io.ResourceLoader.inherits("com.sjl.EventDispatcher");
-
 com.sjl.io.ResourceLoader.prototype.initialize = function()
 {
 	this.BasePath = 'lib/js';
@@ -36,11 +35,11 @@ com.sjl.io.ResourceLoader.prototype.initialize = function()
 					'com.sjl.DOMEventDispatcher',
 					'com.sjl.io.ResourceLoader'];
 
-	if (!window.onReady) window.onReady = function() { if (console && console.info) console.info('No entry point set.'); };
-
+	this.__import = window.Import;
+	
 	this._onLoad = function()
 	{
-		if (!arguments[0] || arguments[0] == "") return;
+		if ((!arguments[0] || arguments[0] == "") || this.IsLoaded(arguments[0])) return;
 		
 		var p = arguments[0];
 
@@ -84,13 +83,20 @@ com.sjl.io.ResourceLoader.prototype.IsQueued = function(p)
 
 com.sjl.io.ResourceLoader.prototype.Import = function(p)
 {
-	if (this.Loaded.indexOf(p) >= 0) return;
-	if (this.Queue.indexOf(p) >= 0) return;
+	var io = com.sjl.io.ResourceLoader.GetInstance();
+	if (arguments.length > 1) 
+	{
+		io.__import.apply(window,arguments);
+		return;
+	}
+	
+	if (io.Loaded.indexOf(p) >= 0) return;
+	if (io.Queue.indexOf(p) >= 0) return;
 
-	this.Queue.push(p);
+	io.Queue.push(p);
 
-	var libpath = (window.DocRoot) ? window.DocRoot + this.BasePath : this.BasePath;
-	this._import(p,p,libpath,"/");
+	var libpath = (window.DocRoot) ? window.DocRoot + io.BasePath : io.BasePath;
+	ImportAs(p,p,libpath,"/");
 };
 
 com.sjl.io.ResourceLoader.__instance = null;
@@ -100,10 +106,42 @@ com.sjl.io.ResourceLoader.GetInstance = function()
 	return this.__instance;
 };
 
-com.sjl.io.ResourceLoader.prototype._import = ImportAs;
+var io = com.sjl.io.ResourceLoader.GetInstance();
+window.Import = io.Import;
 
-Import = com.sjl.io.ResourceLoader.GetInstance().Import.bind(com.sjl.io.ResourceLoader.GetInstance());
+function __sjlinit()
+{
+	// quit if this function has already been called
+	if (arguments.callee.done) return;
+	// flag this function so we don't do the same thing twice
+	arguments.callee.done = true;
 
-window.onload = function() {
-	window.onReady();
+	if (typeof window.kickstart != 'undefined') window.kickstart();
+}
+
+//IE Onload - without delays for image loads
+/*@cc_on @*/
+/*@if (@_win32)
+document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
+var script = document.getElementById("__ie_onload");
+script.onreadystatechange = function() {
+  if (this.readyState == "complete") {
+    __sjlinit(); // call the onload handler
+  }
 };
+/*@end @*/
+
+// Safari Onload
+if (/WebKit/i.test(navigator.userAgent)) { // sniff
+  var _timer = setInterval(function() {
+    if (/loaded|complete/.test(document.readyState)) {
+      clearInterval(_timer);
+      __sjlinit(); // call the onload handler
+    }
+  }, 10);
+}
+else if (document.addEventListener) {
+	document.addEventListener("DOMContentLoaded", __sjlinit, false);
+}
+
+if (!document.all) window.onload = __sjlinit;
