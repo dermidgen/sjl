@@ -81,8 +81,8 @@ if(arguments.callee.done){
 return;
 }
 arguments.callee.done=true;
-if(typeof window.kickstart!="undefined"){
-window.kickstart();
+if(typeof window.onReady!="undefined"){
+window.onReady();
 }
 }
 if(/WebKit/i.test(navigator.userAgent)){

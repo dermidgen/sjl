@@ -64,6 +64,9 @@
 			<mapper id="js_out" type="glob" from="*" to="${path.build.release}/bootstrap.js"/>
 			<redirector createemptyfiles="true" append="true" output="${path.build.release}/bootstrap.js"/>
 		</apply>
+		<concat destfile="${path.build.release}/bootstrap.js" append="true">
+			<filelist dir="${path.src}/com/sjl/io" files="ResourceLoader.ie.stub"/>
+		</concat>
 	</target>
 
 	<target name="package-init">

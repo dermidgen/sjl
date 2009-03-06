@@ -116,20 +116,8 @@ function __sjlinit()
 	// flag this function so we don't do the same thing twice
 	arguments.callee.done = true;
 
-	if (typeof window.kickstart != 'undefined') window.kickstart();
+	if (typeof window.onReady != 'undefined') window.onReady();
 }
-
-//IE Onload - without delays for image loads
-/*@cc_on @*/
-/*@if (@_win32)
-document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
-var script = document.getElementById("__ie_onload");
-script.onreadystatechange = function() {
-  if (this.readyState == "complete") {
-    __sjlinit(); // call the onload handler
-  }
-};
-/*@end @*/
 
 // Safari Onload
 if (/WebKit/i.test(navigator.userAgent)) { // sniff
@@ -144,4 +132,4 @@ else if (document.addEventListener) {
 	document.addEventListener("DOMContentLoaded", __sjlinit, false);
 }
 
-if (!document.all) window.onload = __sjlinit;
+if(!document.all)window.onload = __sjlinit;

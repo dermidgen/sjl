@@ -509,8 +509,8 @@ if(arguments.callee.done){
 return;
 }
 arguments.callee.done=true;
-if(typeof window.kickstart!="undefined"){
-window.kickstart();
+if(typeof window.onReady!="undefined"){
+window.onReady();
 }
 }
 if(/WebKit/i.test(navigator.userAgent)){
@@ -529,4 +529,14 @@ if(!document.all){
 window.onload=__sjlinit;
 }
 
-
+//IE Onload - without delays for image loads
+/*@cc_on @*/
+/*@if (@_win32)
+document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
+var script = document.getElementById("__ie_onload");
+script.onreadystatechange = function() {
+  if (this.readyState == "complete") {
+    __sjlinit(); // call the onload handler
+  }
+};
+/*@end @*/

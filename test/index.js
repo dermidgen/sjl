@@ -14,19 +14,7 @@ Ajile.EnableDebug(false);
 //Ajile.ShowLog();
 Ajile.EnableCloak(true);
 
-//IE Onload - without delays for image loads
-/*@cc_on @*/
-/*@if (@_win32)
-document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
-var script = document.getElementById("__ie_onload");
-script.onreadystatechange = function() {
-  if (this.readyState == "complete") {
-    __sjlinit(); // call the onload handler
-  }
-};
-/*@end @*/
-
-function kickstart()
+window.onReady = function()
 {
 	// We need to tell the resource loader what our base path is for Imports
 	var io = com.sjl.io.ResourceLoader.GetInstance();
