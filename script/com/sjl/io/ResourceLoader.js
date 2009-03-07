@@ -29,7 +29,8 @@ com.sjl.io.ResourceLoader.prototype.initialize = function()
 {
 	this.BasePath = 'lib/js';
 	this.Queue = [];
-	this.Loaded = ['com.sjl.EventDispatcher',
+	this.Loaded = ['com.iskitz.ajile',
+					'com.sjl.EventDispatcher',
 					'com.sjl.application.Environment',
 					'com.sjl.TearDown',
 					'com.sjl.DOMEventDispatcher',
@@ -39,10 +40,9 @@ com.sjl.io.ResourceLoader.prototype.initialize = function()
 	
 	this._onLoad = function()
 	{
-		if ((!arguments[0] || arguments[0] == "") || this.IsLoaded(arguments[0])) return;
+		if ((!arguments[0] || arguments[0] == "") || this.IsLoaded(arguments[0]) || !this.IsQueued(arguments[0])) return;
 		
 		var p = arguments[0];
-
 		for(var i=0; i<this.Queue.length; i++) if (this.Queue[i] == p) this.Queue.splice(i,1);
 
 		this.Loaded.push(p);
@@ -90,13 +90,33 @@ com.sjl.io.ResourceLoader.prototype.Import = function(p)
 		return;
 	}
 	
-	if (io.Loaded.indexOf(p) >= 0) return;
-	if (io.Queue.indexOf(p) >= 0) return;
+	var queuePackage = function(p)
+	{
+		if (io.Loaded.indexOf(p) >= 0) return;
+		if (io.Queue.indexOf(p) >= 0) return;
+		
+		io.Queue.push(p);
+	};
+	
+	var importQueue = function()
+	{
+		for(var i=0; i<io.Queue.length; i++)
+		{
+			var libpath = (window.DocRoot) ? window.DocRoot + io.BasePath : io.BasePath;
+			ImportAs(io.Queue[i],io.Queue[i],libpath,"/");
+		}
+	};
 
-	io.Queue.push(p);
-
-	var libpath = (window.DocRoot) ? window.DocRoot + io.BasePath : io.BasePath;
-	ImportAs(p,p,libpath,"/");
+	if (typeof p == 'object')
+	{
+		for(var i=0; i<p.length; i++)
+		{
+			queuePackage(p[i]);
+		}
+	}
+	else queuePackage(p);
+	
+	importQueue();
 };
 
 com.sjl.io.ResourceLoader.__instance = null;

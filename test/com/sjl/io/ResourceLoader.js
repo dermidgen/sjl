@@ -15,10 +15,10 @@ com.sjl.io.ResourceLoader.inherits("com.sjl.EventDispatcher");
 com.sjl.io.ResourceLoader.prototype.initialize=function(){
 this.BasePath="lib/js";
 this.Queue=[];
-this.Loaded=["com.sjl.EventDispatcher","com.sjl.application.Environment","com.sjl.TearDown","com.sjl.DOMEventDispatcher","com.sjl.io.ResourceLoader"];
+this.Loaded=["com.iskitz.ajile","com.sjl.EventDispatcher","com.sjl.application.Environment","com.sjl.TearDown","com.sjl.DOMEventDispatcher","com.sjl.io.ResourceLoader"];
 this.__import=window.Import;
 this._onLoad=function(){
-if((!arguments[0]||arguments[0]=="")||this.IsLoaded(arguments[0])){
+if((!arguments[0]||arguments[0]=="")||this.IsLoaded(arguments[0])||!this.IsQueued(arguments[0])){
 return;
 }
 var p=arguments[0];
@@ -57,6 +57,7 @@ if(arguments.length>1){
 io.__import.apply(window,arguments);
 return;
 }
+var _9=function(p){
 if(io.Loaded.indexOf(p)>=0){
 return;
 }
@@ -64,8 +65,21 @@ if(io.Queue.indexOf(p)>=0){
 return;
 }
 io.Queue.push(p);
-var _9=(window.DocRoot)?window.DocRoot+io.BasePath:io.BasePath;
-ImportAs(p,p,_9,"/");
+};
+var _b=function(){
+for(var i=0;i<io.Queue.length;i++){
+var _d=(window.DocRoot)?window.DocRoot+io.BasePath:io.BasePath;
+ImportAs(io.Queue[i],io.Queue[i],_d,"/");
+}
+};
+if(typeof p=="object"){
+for(var i=0;i<p.length;i++){
+_9(p[i]);
+}
+}else{
+_9(p);
+}
+_b();
 };
 com.sjl.io.ResourceLoader.__instance=null;
 com.sjl.io.ResourceLoader.GetInstance=function(){
