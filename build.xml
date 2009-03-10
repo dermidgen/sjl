@@ -131,7 +131,8 @@
 			<fileset dir="${path.lib}/apiviewer"/>
 		</copy>
 		
-		<apply executable="${path.lib}/jsdoc/jsdoc.pl" parallel="true">
+		<apply executable="perl" parallel="true">
+			<arg value="${path.lib}/jsdoc/jsdoc.pl"/>
 			<arg value="--package-naming"/>
 			<arg value="--project-name=${project.name}"/>
 			<arg value="-p"/>
@@ -150,7 +151,9 @@
 	</target>
 
 	<target name="fix-docs-xml">
-		<exec executable="${path.lib}/js_fix_CDATA_entities.php"/>
+		<exec executable="php">
+			<arg value="${path.lib}/js_fix_CDATA_entities.php"/>
+		</exec>
 	</target>
 	
 	<target name="package-release">
