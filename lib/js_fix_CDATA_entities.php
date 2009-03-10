@@ -1,5 +1,5 @@
 #!/usr/bin/php
-<?
+<?php
 /**
  * This utility will clean the data within documentation output from JSDoc.
  * JSDoc keeps HTML from source comments and descriptions and wraps them in
@@ -34,16 +34,18 @@ foreach($result as $res)
 		$value = $res->nodeValue;
 		$parent = $res->parentNode;
 
-		$hDoc = new DOMDocument();
-		$hDoc->loadHTML($value);
+		if ($value)
+		{
+			$hDoc = new DOMDocument();
+			$hDoc->loadHTML($value);
 
-		$xDoc = new DOMDocument();
-		$xDoc->loadXML($hDoc->saveXML());
+			$xDoc = new DOMDocument();
+			$xDoc->loadXML($hDoc->saveXML());
 
-		$p = $jsdoc->importNode($xDoc->documentElement->firstChild->firstChild,true);
+			$p = $jsdoc->importNode($xDoc->documentElement->firstChild->firstChild,true);
 
-		$parent->replaceChild($p,$res);
-
+			$parent->replaceChild($p,$res);
+		}
 	}
 	$res->normalize();
 }
