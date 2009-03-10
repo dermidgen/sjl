@@ -21,6 +21,7 @@ Namespace('com.sjl');
  * @author Danny Graham
  */
 com.sjl.DOMParser = Class.create();
+com.sjl.DOMParser.inherits('com.sjl.EventDispatcher');
 com.sjl.DOMParser.prototype.initialize = function()
 {
 };
@@ -53,6 +54,7 @@ com.sjl.DOMParser.prototype.parseDOM = function(oRoot)
 		oParent.replaceChild(oClass,oEm);
 	};
 	
+	var self = this;
 	var e = {};
 	e.oncomplete = function(p)
 	{
@@ -62,6 +64,10 @@ com.sjl.DOMParser.prototype.parseDOM = function(oRoot)
 		{
 			replaceNode(pList[i][0],pList[i][1]);
 		}
+		
+		self.dispatch({
+			type:'oncomplete'
+		});
 	};
 	com.sjl.io.ResourceLoader.GetInstance().addListener('oncomplete',e);
 

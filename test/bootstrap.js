@@ -342,6 +342,7 @@ this.DOMEvents.splice(i,1);
 
 Namespace("com.sjl");
 com.sjl.DOMParser=Class.create();
+com.sjl.DOMParser.inherits("com.sjl.EventDispatcher");
 com.sjl.DOMParser.prototype.initialize=function(){
 };
 com.sjl.DOMParser.prototype.parseDOM=function(_1){
@@ -366,12 +367,14 @@ var _d=eval("new "+_9+"("+_b+");");
 var _e=_a.parentNode;
 _e.replaceChild(_d,_a);
 };
+var _f=this;
 var e={};
 e.oncomplete=function(p){
 com.sjl.io.ResourceLoader.GetInstance().removeListener("oncomplete",e);
 for(var i=0;i<_4.length;i++){
 _8(_4[i][0],_4[i][1]);
 }
+_f.dispatch({type:"oncomplete"});
 };
 com.sjl.io.ResourceLoader.GetInstance().addListener("oncomplete",e);
 Import(_5);
