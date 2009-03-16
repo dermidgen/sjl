@@ -95,6 +95,7 @@ if(arguments.callee.done){
 return;
 }
 arguments.callee.done=true;
+window.__sjlinitFired=true;
 if(typeof window.onReady!="undefined"){
 window.onReady();
 }

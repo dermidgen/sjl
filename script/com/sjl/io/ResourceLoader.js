@@ -135,6 +135,8 @@ function __sjlinit()
 	if (arguments.callee.done) return;
 	// flag this function so we don't do the same thing twice
 	arguments.callee.done = true;
+	
+	window.__sjlinitFired = true;
 
 	if (typeof window.onReady != 'undefined') window.onReady();
 }
